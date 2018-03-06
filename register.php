@@ -97,9 +97,9 @@ if (check_post('email') && check_post('login') && check_post('last_name') && che
 			<br />
 			<input class="login" type="text" name="login" placeholder="Login" required />
 			<br />
-			<input class="login" type="text" name="last_name" placeholder="Last name" required />
-			<br />
 			<input class="login" type="text" name="first_name" placeholder="First name" required />
+			<br />
+			<input class="login" type="text" name="last_name" placeholder="Last name" required />
 			<br />
 			<input class="login" type="password" name="password" placeholder="Password" required />
 			<br />

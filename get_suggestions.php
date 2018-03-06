@@ -6,15 +6,15 @@ if ($_SESSION['id'] == '-42')
 	echo "log";
 	exit;
 }
-$req = $bdd->prepare('SELECT gender, orientation, id, bio, pic_0, age FROM users WHERE id = ?');
+$req = $bdd->prepare('SELECT gender, orientation, id, bio, pic_0, age, popularity, auto_loc, latitude, longitude, fake_latitude, fake_longitude FROM users WHERE id = ?');
 $req->execute(array($_SESSION['id']));
 if ($req->rowCount() != 1)
 {
 	echo "error";
 	exit;
 }
-$data = $req->fetch();
-if ($data['gender'] == 0 || $data['orientation'] == 0 || $data['bio'] == ""|| $data['age'] == ""|| $data['pic_0'] == "")
+$me = $req->fetch();
+if ($me['gender'] == 0 || $me['orientation'] == 0 || $me['bio'] == ""|| $me['age'] == ""|| $me['pic_0'] == "")
 {
 	?>
 	<div class="box_big_message">
@@ -40,20 +40,21 @@ while ($res = $req->fetch())
 if (isset($_POST['age_min']) && isset($_POST['age_max']) && isset($_POST['popularity_min']) && isset($_POST['popularity_max']) && isset($_POST['latitude']) && isset($_POST['longitude']) && isset($_POST['distance_min']) && isset($_POST['distance_max']) && isset($_POST['tags']) && isset($_POST['order']) && isset($_POST['limit']))
 {
 	$users 	= [];
-	$req = $bdd->prepare('SELECT age, pic_0, popularity, latitude, longitude, fake_latitude, fake_longitude, auto_loc, id, first_name, last_name, user_id FROM users WHERE age != "" AND pic_0 != "" AND confirmed = 1 AND ? & gender = gender AND orientation & ? = ? AND id != ?');
-	$req->execute(array($data['orientation'], $data['gender'], $data['gender'], $data['id']));
+	$req = $bdd->prepare('SELECT age, pic_0, popularity, latitude, longitude, fake_latitude, fake_longitude, auto_loc, id, first_name, last_name, user_id FROM users WHERE age != "" AND pic_0 != "" AND confirmed = 1 AND id != ?');
+	$req->execute(array($me['id']));
 	while ($data = $req->fetch())
 		$users[] = $data;
-	$tmp = [];
-	$tags = json_decode($_POST['tags']);
+	$match = [];
 	foreach ($users as $key => $el)
 	{
-		$req = $bdd->prepare("SELECT id FROM likes WHERE liking_id = ? AND liked_id = ?");
-		$req->execute(array($_SESSION['id'], $el['id']));
-		if ($req->rowCount() != 0)
-			continue ;
-		if (blocked($_SESSION['id'], $el['id'], $bdd))
-			continue ;
+		if ($me['orientation'] & $el['gender'] == $el['gender'] && $el['orientation'] & $me['gender'] == $me['gender'])
+		{
+			$match[] = $el;
+			unset($users[$key]);
+		}
+	}
+	foreach ($users as $key => $el)
+	{
 		$latitude = $el['latitude'];
 		$longitude = $el['longitude'];
 		if ($el['auto_loc'] == 0)
@@ -61,7 +62,60 @@ if (isset($_POST['age_min']) && isset($_POST['age_max']) && isset($_POST['popula
 			$latitude = $el['fake_latitude'];
 			$longitude = $el['fake_longitude'];
 		}
-		$el['distance'] = distance($latitude, $longitude, $_POST['latitude'], $_POST['longitude']);
+		$me_latitude = $me['latitude'];
+		$me_longitude = $me['longitude'];
+		if ($me['auto_loc'] == 0)
+		{
+			$me_latitude = $me['fake_latitude'];
+			$me_longitude = $me['fake_longitude'];
+		}
+		$el['distance'] = distance($latitude, $longitude, $me_latitude, $me_longitude);
+		if ($el['distance'] <= 100)
+		{
+			$match[] = $el;
+			unset($users[$key]);
+		}
+	}
+	foreach ($users as $key => $el)
+	{
+		$i = 0;
+		$sql = "SELECT id FROM tags WHERE user_id = ? AND tag IN (";
+		foreach ($my_tags as $tag)
+		{
+			if ($i > 0)
+				$sql .= ", ";
+			$sql .= "?";
+			$i++;
+		}
+		$sql .= ")";
+		$req = $bdd->prepare($sql);
+		array_unshift($my_tags, $el['id']);
+		$req->execute($my_tags);
+		$nbr_tags = $req->rowCount();
+		if ($nbr_tags > count($my_tags) / 2)
+		{
+			$match[] = $el;
+			unset($users[$key]);
+		}
+	}
+	foreach ($users as $key => $el)
+	{
+		if ($el['popularity'] > $me['popularity'] - 10 && $el['popularity'] < $me['popularity'] + 10)
+		{
+			$match[] = $el;
+			unset($users[$key]);
+		}
+	}
+	$tmp = [];
+	$tags = json_decode($_POST['tags']);
+	foreach ($match as $key => $el)
+	{
+		$req = $bdd->prepare("SELECT id FROM likes WHERE liking_id = ? AND liked_id = ?");
+		$req->execute(array($_SESSION['id'], $el['id']));
+		if ($req->rowCount() != 0)
+			continue ;
+		if (blocked($_SESSION['id'], $el['id'], $bdd))
+			continue ;
 		$nbr_tags = 0;
 		if (count($tags) > 0)
 		{

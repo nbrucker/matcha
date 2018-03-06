@@ -3,8 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Matcha</title>
-	<script src="/jquery.js"></script>
-	<script src="/js.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css.css">
 	<link rel="icon" type="image/png" href="/imgs/42.png" />
 </head>

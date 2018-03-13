@@ -22,7 +22,7 @@ if ($_SESSION['id'] == '-42')
 		<div class="chat_box">
 			<div id="chat_box" class="chat_box_up"></div>
 			<div class="chat_box_down">
-				<input onkeyup="sendMsg(event, '<?php if (check_get('u')) echo $_GET['u']; else echo "unknown"; ?>');" placeholder="Your message" type="text" class="not_login" id="msg">
+				<input onkeyup="sendMsg(event, '<?php if (check_get('u')) echo $_GET['u']; else echo "unknown"; ?>');" type="text" class="not_login" id="msg">
 			</div>
 		</div>
 		<div class="chat_list">
@@ -30,7 +30,7 @@ if ($_SESSION['id'] == '-42')
 			$req = $bdd->prepare('SELECT users.first_name, users.last_name, users.user_id FROM users INNER JOIN likes as a ON users.id = a.liked_id INNER JOIN likes as b ON a.liked_id = b.liking_id WHERE b.liked_id = ? AND a.liking_id = ?');
 			$req->execute(array($_SESSION['id'], $_SESSION['id']));
 			while ($data = $req->fetch())
-				echo "<a href=\"/chat?u=".$data['user_id']."\"><span class=\"chat_list\">".$data['first_name']." ".$data['last_name']."</span></a>";
+				echo "<a href=\"/chat.php?u=".$data['user_id']."\"><span class=\"chat_list\">".$data['first_name']." ".$data['last_name']."</span></a>";
 			?>
 		</div>
 	</div>

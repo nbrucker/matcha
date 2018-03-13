@@ -1,6 +1,6 @@
 <?php include($_SERVER['DOCUMENT_ROOT'].'/database.php'); ?>
 <?php
-session_destroy();
+$_SESSION['id'] = "-42";
 header('Location: /');
 exit;
 ?>

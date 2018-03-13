@@ -1,10 +1,42 @@
 <?php include($_SERVER['DOCUMENT_ROOT'].'/database.php'); ?>
 <?php
+function get_fake_image($men, $women, $gender)
+{
+	$link = "imgs/";
+	if ($gender == 1)
+	{
+		$link .= "fake_men/";
+		$x = rand(0, $men - 1);
+	}
+	else
+	{
+		$link .= "fake_women/";
+		$x = rand(0, $women - 1);
+	}
+	$link .= $x.".jpg";
+	return ($link);
+}
+?>
+<?php
+function get_fake_tag($used)
+{
+	$tags = ['fake', 'tags', 'hey'];
+	$tag = $tags[rand(0, count($tags) - 1)];
+	while (in_array($tag, $used))
+		$tag = $tags[rand(0, count($tags) - 1)];
+	return $tag;
+}
+?>
+<?php
 require_once 'vendor/autoload.php';
 
 $faker = Faker\Factory::create();
 $j = 0;
-while ($j < 1000)
+$files = glob("imgs/fake_men/*");
+$men = count($files) - 1;
+$files = glob("imgs/fake_women/*");
+$women = count($files) - 1;
+while ($j < 500)
 {
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$randstring = 'u';
@@ -25,6 +57,7 @@ while ($j < 1000)
 		$req->execute(array($randstring));
 	}
 	$hash = hash('whirlpool', $faker->password);
+	$gender = rand(1, 2);
 	$req = $bdd->prepare('INSERT INTO users (user_id, email, login, last_name, first_name, password, gender, orientation, bio, popularity, last_log, latitude, longitude, fake_latitude, fake_longitude, auto_loc, confirmed, forgot, pic_0, pic_1, pic_2, pic_3, pic_4, age) VALUES (:user_id, :email, :login, :last_name, :first_name, :password, :gender, :orientation, :bio, :popularity, :last_log, :latitude, :longitude, :fake_latitude, :fake_longitude, 0, 1, 0, :pic_0, :pic_1, :pic_2, :pic_3, :pic_4, :age)');
 	$req->execute(array(
 	'user_id' => $randstring,
@@ -33,7 +66,7 @@ while ($j < 1000)
 	'last_name' => $faker->lastName,
 	'first_name' => $faker->firstName,
 	'password' => $hash,
-	'gender' => rand(1, 2),
+	'gender' => $gender,
 	'orientation' => rand(1, 3),
 	'bio' => $faker->text(999),
 	'popularity' => rand(0, 99),
@@ -42,23 +75,30 @@ while ($j < 1000)
 	'longitude' => $faker->longitude,
 	'fake_latitude' => $faker->latitude,
 	'fake_longitude' => $faker->longitude,
-	'pic_0' => get_fake_image(),
+	'pic_0' => get_fake_image($men, $women, $gender),
 	'pic_1' => "",
 	'pic_2' => "",
 	'pic_3' => "",
 	'pic_4' => "",
 	'age' => rand(18, 40)
 	));
+	$id = $bdd->lastInsertId();
+	$i = 0;
+	$x = rand(1, 3);
+	$tags = [];
+	while ($i < $x)
+	{
+		$tag = htmlspecialchars(get_fake_tag($tags));
+		$tags[] = $tag;
+		$req = $bdd->prepare('INSERT INTO tags (user_id, tag) VALUES (:user_id, :tag)');
+		$req->execute(array(
+		'user_id' => $id,
+		'tag' => $tag
+		));
+		$i++;
+	}
 	$j++;
 }
-?>
-<?php
-function get_fake_image()
-{
-	$link = "imgs/";
-	$name = ['aquaman', 'arrow', 'atom', 'batman', 'cyborg', 'deathstroke', 'flash', 'hal', 'john', 'red', 'superman', 'wonder'];
-	$x = rand(0, count($name) - 1);
-	$link .= $name[$x].".png";
-	return ($link);
-}
+header('Location: /');
+exit;
 ?>

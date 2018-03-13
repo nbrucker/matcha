@@ -34,6 +34,8 @@ function sendMsg(key, id)
 					var arr = JSON.parse(code_html);
 					msg.push(arr[0]);
 					$("#chat_box").append(arr[1]);
+					var objDiv = document.getElementById("chat_box");
+					objDiv.scrollTop = objDiv.scrollHeight;
 				}
 			}
 		});
@@ -51,6 +53,7 @@ function getMsg(id)
 		{
 			if (code_html != "log" && code_html != "error")
 			{
+				$x = 0;
 				var arr = JSON.parse(code_html);
 				for (var i = 0; i < arr.length; i++)
 				{
@@ -58,7 +61,13 @@ function getMsg(id)
 					{
 						msg.push(arr[i][0]);
 						$("#chat_box").append(arr[i][1]);
+						$x++;
 					}
+				}
+				if ($x != 0)
+				{
+					var objDiv = document.getElementById("chat_box");
+					objDiv.scrollTop = objDiv.scrollHeight;
 				}
 			}
 		}
@@ -205,11 +214,12 @@ function getPositionIndex()
 		}
 	});
 }
-function setMapIndex(json)
+async function setMapIndex(json)
 {
 	var arr = JSON.parse(json);
 	if (arr[0] == "unknown" || arr[1] == "unknown" || arr[0] == "999" || arr[1] == "999")
 	{
+		sleep(100);
 		getPositionIndex();
 		return ;
 	}
@@ -557,13 +567,14 @@ function getPositionProfile(id)
 		}
 	});
 }
-function setMapProfile(json)
+async function setMapProfile(json)
 {
 	var arr = JSON.parse(json);
 	latitude = arr[0];
 	longitude = arr[1];
 	if (arr[0] == "unknown" || arr[1] == "unknown" || arr[0] == "999" || arr[1] == "999")
 	{
+		sleep(100);
 		getPositionProfile();
 		return ;
 	}
@@ -846,11 +857,12 @@ function getRealPosition()
 		}
 	});
 }
-function setAutoLoc(json)
+async function setAutoLoc(json)
 {
 	var arr = JSON.parse(json);
 	if (arr[0] == "unknown" || arr[1] == "unknown" || arr[0] == "999" || arr[1] == "999")
 	{
+		sleep(100);
 		getRealPosition();
 		return ;
 	}
@@ -902,11 +914,12 @@ function getPosition()
 		}
 	});
 }
-function setMap(json)
+async function setMap(json)
 {
 	var arr = JSON.parse(json);
 	if (arr[0] == "unknown" || arr[1] == "unknown" || arr[0] == "999" || arr[1] == "999")
 	{
+		sleep(100);
 		getPosition();
 		return ;
 	}

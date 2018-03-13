@@ -69,8 +69,8 @@ if (isset($_POST['age_min']) && isset($_POST['age_max']) && isset($_POST['popula
 			$me_latitude = $me['fake_latitude'];
 			$me_longitude = $me['fake_longitude'];
 		}
-		$el['distance'] = distance($latitude, $longitude, $me_latitude, $me_longitude);
-		if ($el['distance'] <= 100)
+		$distance = distance($latitude, $longitude, $me_latitude, $me_longitude);
+		if ($distance <= 100)
 		{
 			$match[] = $el;
 			unset($users[$key]);
@@ -116,6 +116,14 @@ if (isset($_POST['age_min']) && isset($_POST['age_max']) && isset($_POST['popula
 			continue ;
 		if (blocked($_SESSION['id'], $el['id'], $bdd))
 			continue ;
+		$latitude = $el['latitude'];
+		$longitude = $el['longitude'];
+		if ($el['auto_loc'] == 0)
+		{
+			$latitude = $el['fake_latitude'];
+			$longitude = $el['fake_longitude'];
+		}
+		$el['distance'] = distance($latitude, $longitude, $_POST['latitude'], $_POST['longitude']);
 		$nbr_tags = 0;
 		if (count($tags) > 0)
 		{

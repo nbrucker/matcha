@@ -5,7 +5,7 @@ if (check_post('ip'))
 {
 	if ($_SESSION['ip'] != $_POST['ip'] || $_SESSION['ip'] == "unknown" || $_SESSION['latitude'] == "unknown" || $_SESSION['longitude'] == "unknown")
 	{
-		$content = json_decode(file_get_contents("http://nbrucker.gwiddle.co.uk/test.php?ip=".$_POST['ip']));
+		$content = json_decode(file_get_contents("https://nicolas-cella.com/test.php?ip=".$_POST['ip']));
 		$_SESSION['latitude'] = $content->lat;
 		$_SESSION['longitude'] = $content->lon;
 		$_SESSION['ip'] = $_POST['ip'];
@@ -30,7 +30,7 @@ while ($data = $req->fetch())
 {
 	$el = [];
 	$el[0] = $data['notification_id'];
-	$el[1] = "<div onclick=\"gotoNotification('".$data['notification_id']."')\" id=\"parent_".$data['notification_id']."\" class=\"notification_box\"><span class=\"notification_text\"><a id=\"child_".$data['notification_id']."\" class=\"notification_user_link\" href=\"/profile?u=".$data['user_id']."\">".$data['first_name']." ".$data['last_name']."</a> ".$data['text']."</span></div>";
+	$el[1] = "<div onclick=\"gotoNotification('".$data['notification_id']."')\" id=\"parent_".$data['notification_id']."\" class=\"notification_box\"><span class=\"notification_text\"><a id=\"child_".$data['notification_id']."\" class=\"notification_user_link\" href=\"/profile.php?u=".$data['user_id']."\">".$data['first_name']." ".$data['last_name']."</a> ".$data['text']."</span></div>";
 	$array[] = $el;
 }
 echo json_encode($array);

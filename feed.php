@@ -86,7 +86,7 @@ while ($j < 500)
 	'pic_3' => "",
 	'pic_4' => "",
 	'age' => rand(18, 40),
-	'token' => "",
+	'token' => ""
 	));
 	$fake_id = $bdd->lastInsertId();
 	$i = 0;

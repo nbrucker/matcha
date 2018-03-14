@@ -874,7 +874,13 @@ span.list_title
 	}
 	div.right
 	{
-		float: left;
+		float: none!important;
+		display: block;
+	}
+	div.section
+	{
+		float: none!important;
+		display: block;
 	}
 }
 @media screen and (max-width: 440px)

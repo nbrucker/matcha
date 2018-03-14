@@ -30,6 +30,11 @@ function get_fake_tag($used)
 <?php
 require_once 'vendor/autoload.php';
 
+$min_lat = 41;
+$max_lat = 51;
+$min_lon = 0;
+$max_lon = 7.5;
+
 $faker = Faker\Factory::create();
 $j = 0;
 $files = glob("imgs/fake_men/*");
@@ -71,10 +76,10 @@ while ($j < 500)
 	'bio' => $faker->text(999),
 	'popularity' => rand(0, 99),
 	'last_log' => time(),
-	'latitude' => $faker->latitude,
-	'longitude' => $faker->longitude,
-	'fake_latitude' => $faker->latitude,
-	'fake_longitude' => $faker->longitude,
+	'latitude' => rand($min_lat * pow(10, 6), $max_lat * pow(10, 6)) / pow(10, 6),
+	'longitude' => rand($min_lon * pow(10, 6), $max_lon * pow(10, 6)) / pow(10, 6),
+	'fake_latitude' => rand($min_lat * pow(10, 6), $max_lat * pow(10, 6)) / pow(10, 6),
+	'fake_longitude' => rand($min_lon * pow(10, 6), $max_lon * pow(10, 6)) / pow(10, 6),
 	'pic_0' => get_fake_image($men, $women, $gender),
 	'pic_1' => "",
 	'pic_2' => "",

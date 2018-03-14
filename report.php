@@ -30,18 +30,6 @@ if (check_post('id'))
 		'reported_id' => $user['id'],
 		'reporting_id' => $_SESSION['id']
 		));
-		$req = $bdd->prepare('SELECT user_id FROM users WHERE id = ?');
-		$req->execute(array(intval($_SESSION['id'])));
-		$data = $req->fetch();
-		$req = $bdd->prepare('INSERT INTO notifications (notification_id, user_id, seen, time, text, notifier_id, link) VALUES (:notification_id, :user_id, 0, :time, :text, :notifier_id, :link)');
-		$req->execute(array(
-			'notification_id' => getNotificationID($bdd),
-			'user_id' => intval($user['id']),
-			'time' => intval(time()),
-			'text' => "reported you",
-			'notifier_id' => intval($_SESSION['id']),
-			'link' => '/profile.php?u='.$data['user_id']
-		));
 		echo "add";
 		exit;
 	}

@@ -27,18 +27,6 @@ if (check_post('id'))
 	{
 		$req = $bdd->prepare('DELETE FROM blocks WHERE blocked_id = ? AND blocking_id = ?');
 		$req->execute(array(intval($user['id']), intval($_SESSION['id'])));
-		$req = $bdd->prepare('SELECT user_id FROM users WHERE id = ?');
-		$req->execute(array(intval($_SESSION['id'])));
-		$data = $req->fetch();
-		$req = $bdd->prepare('INSERT INTO notifications (notification_id, user_id, seen, time, text, notifier_id, link) VALUES (:notification_id, :user_id, 0, :time, :text, :notifier_id, :link)');
-		$req->execute(array(
-			'notification_id' => getNotificationID($bdd),
-			'user_id' => intval($user['id']),
-			'time' => intval(time()),
-			'text' => "unblocked you",
-			'notifier_id' => intval($_SESSION['id']),
-			'link' => '/profile.php?u='.$data['user_id']
-		));
 		echo "remove";
 		exit;
 	}

@@ -43,7 +43,7 @@ if (check_post('id') && check_post('msg') && $_POST['id'] != 'unknown')
 	));
 	$array = [];
 	array_push($array, $id);
-	$text = "<div class=\"chat_text_me\"><span class=\"chat_text_me\">[".date("H:i", intval(time()))."] ".$user['first_name']." ".$user['last_name']." : ".htmlspecialchars($_POST['msg'])."</span></div>";
+	$text = "<div class=\"chat_text_me\"><span class=\"chat_text_me\">[".date("H:i", intval(time()))."] ".htmlspecialchars($_POST['msg'])."</span></div>";
 	array_push($array, $text);
 	echo json_encode($array);
 }

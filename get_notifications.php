@@ -5,9 +5,10 @@ if (check_post('ip'))
 {
 	if ($_SESSION['ip'] != $_POST['ip'] || $_SESSION['ip'] == "unknown" || $_SESSION['latitude'] == "unknown" || $_SESSION['longitude'] == "unknown")
 	{
-		$content = json_decode(file_get_contents("https://nicolas-cella.com/test.php?ip=".$_POST['ip']));
-		$_SESSION['latitude'] = $content->lat;
-		$_SESSION['longitude'] = $content->lon;
+		$content = json_decode(file_get_contents("https://ipinfo.io/".$_POST['ip']."/json"));
+		$loc = explode(',', $content->loc);
+		$_SESSION['latitude'] = $loc[0];
+		$_SESSION['longitude'] = $loc[1];
 		$_SESSION['ip'] = $_POST['ip'];
 	}
 	if ($_SESSION['id'] != '-42')

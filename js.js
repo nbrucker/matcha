@@ -308,35 +308,6 @@ async function setMapIndex(json)
 		});
 	});
 }
-function getHistory()
-{
-	var data = new FormData();
-	data.append('seen',$("#Seen").is(":checked"));
-	data.append('unseen', $("#Unseen").is(":checked"));
-	data.append('like', $("#Like").is(":checked"));
-	data.append('unlike', $("#Unlike").is(":checked"));
-	data.append('visit', $("#Visit").is(":checked"));
-	data.append('block', $("#Block").is(":checked"));
-	data.append('unblock', $("#Unblock").is(":checked"));
-	data.append('report', $("#Report").is(":checked"));
-	data.append('message', $("#Message").is(":checked"));
-	data.append('limit', $("#Limit").is(":checked"));
-	data.append('order', $("#Order").val());
-	data.append('age', $("#age").val());
-	$.ajax(
-	{
-		url : '/get_history.php',
-		type : 'POST',
-		data : data,
-		processData: false,
-		contentType: false,
-		dataType : 'html',
-		success : function(code_html, statut)
-		{
-			if (code_html != "error" && code_html != "log")
-				$("#history_box").html(code_html);
-		}
-	});}
 function removeAllNotifications()
 {
 	$.ajax(

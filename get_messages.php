@@ -29,9 +29,9 @@ if (check_post('id') && $_POST['id'] != 'unknown')
 		$msg = [];
 		array_push($msg, $data['id']);
 		if ($data['from_id'] == $_SESSION['id'])
-			$text = "<div class=\"chat_text_me\"><span class=\"chat_text_me\">[".date("H:i", $data['time'])."] ".$user['first_name']." ".$user['last_name']." : ".htmlspecialchars($data['message'])."</span></div>";
+			$text = "<div class=\"chat_text_me\"><span class=\"chat_text_me\">[".date("H:i", $data['time'])."] ".htmlspecialchars($data['message'])."</span></div>";
 		else
-			$text = "<div class=\"chat_text_not\"><span class=\"chat_text_not\">[".date("H:i", $data['time'])."] ".$user['first_name']." ".$user['last_name']." : ".htmlspecialchars($data['message'])."</span></div>";
+			$text = "<div class=\"chat_text_not\"><span class=\"chat_text_not\">[".date("H:i", $data['time'])."] ".htmlspecialchars($data['message'])."</span></div>";
 		array_push($msg, $text);
 		array_push($array, $msg);
 	}

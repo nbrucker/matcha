@@ -40,12 +40,17 @@ if (check_post('id'))
 		$req = $bdd->prepare('SELECT user_id FROM users WHERE id = ?');
 		$req->execute(array(intval($_SESSION['id'])));
 		$data = $req->fetch();
+		$text = "liked you";
+		$req = $bdd->prepare('SELECT id FROM likes WHERE liking_id = ? AND liked_id = ?');
+		$req->execute(array($user['id'], $_SESSION['id']));
+		if ($req->rowCount() == 1)
+			$text = "liked you too";
 		$req = $bdd->prepare('INSERT INTO notifications (notification_id, user_id, seen, time, text, notifier_id, link) VALUES (:notification_id, :user_id, 0, :time, :text, :notifier_id, :link)');
 		$req->execute(array(
 			'notification_id' => getNotificationID($bdd),
 			'user_id' => intval($user['id']),
 			'time' => intval(time()),
-			'text' => "liked you",
+			'text' => $text,
 			'notifier_id' => intval($_SESSION['id']),
 			'link' => '/profile.php?u='.$data['user_id']
 		));
@@ -58,18 +63,23 @@ if (check_post('id'))
 		$req->execute(array($user['id'], $_SESSION['id']));
 		$req = $bdd->prepare('UPDATE users SET popularity = popularity - 1 WHERE id = ?');
 		$req->execute(array($user['id']));
-		$req = $bdd->prepare('SELECT user_id FROM users WHERE id = ?');
-		$req->execute(array(intval($_SESSION['id'])));
-		$data = $req->fetch();
-		$req = $bdd->prepare('INSERT INTO notifications (notification_id, user_id, seen, time, text, notifier_id, link) VALUES (:notification_id, :user_id, 0, :time, :text, :notifier_id, :link)');
-		$req->execute(array(
-			'notification_id' => getNotificationID($bdd),
-			'user_id' => intval($user['id']),
-			'time' => intval(time()),
-			'text' => "unliked you",
-			'notifier_id' => intval($_SESSION['id']),
-			'link' => '/profile.php?u='.$data['user_id']
-		));
+		$req = $bdd->prepare('SELECT id FROM likes WHERE liking_id = ? AND liked_id = ?');
+		$req->execute(array($user['id'], $_SESSION['id']));
+		if ($req->rowCount() == 1)
+		{
+			$req = $bdd->prepare('SELECT user_id FROM users WHERE id = ?');
+			$req->execute(array(intval($_SESSION['id'])));
+			$data = $req->fetch();
+			$req = $bdd->prepare('INSERT INTO notifications (notification_id, user_id, seen, time, text, notifier_id, link) VALUES (:notification_id, :user_id, 0, :time, :text, :notifier_id, :link)');
+			$req->execute(array(
+				'notification_id' => getNotificationID($bdd),
+				'user_id' => intval($user['id']),
+				'time' => intval(time()),
+				'text' => "don't like you anymore",
+				'notifier_id' => intval($_SESSION['id']),
+				'link' => '/profile.php?u='.$data['user_id']
+			));
+		}
 		echo "remove";
 		exit;
 	}

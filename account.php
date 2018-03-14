@@ -193,7 +193,10 @@ $data = $req->fetch();
 		<br />
 		<input class="submit" type="submit" value="Save modification" onclick="saveInfo(event);" />
 	</div>
-	<a class="account" href="/history.php"><div class="account">History</div></a>
+	<a class="account" href="/liked_list.php"><div class="account">Liked list</div></a>
+	<a class="account" href="/liking_list.php"><div class="account">Liking list</div></a>
+	<a class="account" href="/visited_list.php"><div class="account">Visited list</div></a>
+	<a class="account" href="/visiting_list.php"><div class="account">Visiting list</div></a>
 	<a class="account" href="/block_list.php"><div class="account">Block list</div></a>
 	<a class="account" href="/modify_email.php"><div class="account">Modify email</div></a>
 	<a class="account" href="/modify_login.php"><div class="account">Modify login</div></a>

@@ -5,22 +5,16 @@ if ($_SESSION['id'] != '-42')
 	header('Location: /signed_in.php');
 	exit;
 }
-if (!check_get('u'))
+if (!check_get('u') || !check_get('k'))
 {
 	header('Location: /');
 	exit;
 }
 else
 {
-	$req = $bdd->prepare('SELECT forgot FROM users WHERE user_id = ?');
-	$req->execute(array($_GET['u']));
+	$req = $bdd->prepare('SELECT forgot FROM users WHERE user_id = ? AND token = ? AND forgot = 1');
+	$req->execute(array($_GET['u'], $_GET['k']));
 	if ($req->rowCount() != 1)
-	{
-		header('Location: /');
-		exit;
-	}
-	$data = $req->fetch();
-	if ($data['forgot'] != 1)
 	{
 		header('Location: /');
 		exit;
@@ -39,8 +33,8 @@ if (check_post('new_password') && check_post('password_conf'))
 	else
 	{
 		$hash = hash('whirlpool', $_POST['new_password']);
-		$req = $bdd->prepare('UPDATE users SET password = ?, forgot = 0 WHERE user_id = ?');
-		$req->execute(array(htmlspecialchars($hash), $_GET['u']));
+		$req = $bdd->prepare('UPDATE users SET password = ?, forgot = 0, token = ? WHERE user_id = ?');
+		$req->execute(array(htmlspecialchars($hash), htmlspecialchars(""), $_GET['u']));
 		header('Location: /password_redirect.php');
 		exit;
 	}
@@ -63,7 +57,7 @@ if (check_post('new_password') && check_post('password_conf'))
 		<span id="short_pass" class="error_msg">Password too short</span>
 		<span id="number_pass" class="error_msg">Password must include a number</span>
 		<span id="letter_pass" class="error_msg">Password must include a letter</span>
-		<form action="/modify_forgot.php?u=<?php echo $_GET['u'] ?>" method="post">
+		<form action="/modify_forgot.php?u=<?php echo $_GET['u'] ?>&k=<?php echo $_GET['k'] ?>" method="post">
 			<input class="login" type="password" name="new_password" placeholder="New Password" required />
 			<br />
 			<input class="login" type="password" name="password_conf" placeholder="Confirmation" required />

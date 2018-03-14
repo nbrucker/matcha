@@ -20,7 +20,7 @@ function get_fake_image($men, $women, $gender)
 <?php
 function get_fake_tag($used)
 {
-	$tags = ['fake', 'tags', 'hey'];
+	$tags = ['#fake', '#tags', '#hey'];
 	$tag = $tags[rand(0, count($tags) - 1)];
 	while (in_array($tag, $used))
 		$tag = $tags[rand(0, count($tags) - 1)];
@@ -82,7 +82,7 @@ while ($j < 500)
 	'pic_4' => "",
 	'age' => rand(18, 40)
 	));
-	$id = $bdd->lastInsertId();
+	$fake_id = $bdd->lastInsertId();
 	$i = 0;
 	$x = rand(1, 3);
 	$tags = [];
@@ -90,10 +90,23 @@ while ($j < 500)
 	{
 		$tag = htmlspecialchars(get_fake_tag($tags));
 		$tags[] = $tag;
-		$req = $bdd->prepare('INSERT INTO tags (user_id, tag) VALUES (:user_id, :tag)');
+		$req = $bdd->prepare('SELECT id FROM tags WHERE tag = ?');
+		$req->execute(array(htmlspecialchars($tag)));
+		if ($req->rowCount() == 0)
+		{
+			$req = $bdd->prepare('INSERT INTO tags (tag) VALUES (:tag)');
+			$req->execute(array(
+			'tag' => htmlspecialchars($tag)
+			));
+		}
+		$req = $bdd->prepare('SELECT id FROM tags WHERE tag = ?');
+		$req->execute(array(htmlspecialchars($tag)));
+		$data = $req->fetch();
+		$id = $data['id'];
+		$req = $bdd->prepare('INSERT INTO links (tag_id, user_id) VALUES (:tag_id, :user_id)');
 		$req->execute(array(
-		'user_id' => $id,
-		'tag' => $tag
+		'tag_id' => $id,
+		'user_id' => $fake_id
 		));
 		$i++;
 	}

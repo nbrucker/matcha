@@ -48,7 +48,7 @@ if (check_post('email') && check_post('login') && check_post('last_name') && che
 				$req->execute(array($randstring));
 			}
 			$hash = hash('whirlpool', $_POST['password']);
-			$req = $bdd->prepare('INSERT INTO users (user_id, email, login, last_name, first_name, password, bio, pic_0, pic_1, pic_2, pic_3, pic_4, age) VALUES (:user_id, :email, :login, :last_name, :first_name, :password, :bio, :pic_0, :pic_1, :pic_2, :pic_3, :pic_4, :age)');
+			$req = $bdd->prepare('INSERT INTO users (user_id, email, login, last_name, first_name, password, bio, pic_0, pic_1, pic_2, pic_3, pic_4, age, token) VALUES (:user_id, :email, :login, :last_name, :first_name, :password, :bio, :pic_0, :pic_1, :pic_2, :pic_3, :pic_4, :age, :token)');
 			$req->execute(array(
 			'user_id' => htmlspecialchars($randstring),
 			'email' => htmlspecialchars($_POST['email']),
@@ -62,7 +62,8 @@ if (check_post('email') && check_post('login') && check_post('last_name') && che
 			'pic_2' => htmlspecialchars(""),
 			'pic_3' => htmlspecialchars(""),
 			'pic_4' => htmlspecialchars(""),
-			'age' => htmlspecialchars("")
+			'age' => htmlspecialchars(""),
+			'token' => htmlspecialchars("")
 			));
 			$msg = 'To validate your account please click on the following link : http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/confirmation.php?u='.$randstring;
 			mail($_POST['email'], 'Account confirmation', $msg);

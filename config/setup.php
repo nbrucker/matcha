@@ -35,7 +35,8 @@ try
 				pic_2 TEXT NOT NULL,
 				pic_3 TEXT NOT NULL,
 				pic_4 TEXT NOT NULL,
-				age TEXT NOT NULL)");
+				age TEXT NOT NULL,
+				token TEXT NOT NULL)");
 
 	//tags
 	$bdd->query("CREATE TABLE tags(
@@ -96,7 +97,8 @@ try
 }
 catch (Exception $e)
 {
-	header("Location: /error.php");
+	echo $e;
+	// header("Location: /error.php");
 	exit;
 }
 ?>

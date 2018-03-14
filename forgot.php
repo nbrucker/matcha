@@ -12,10 +12,16 @@ if (check_post('email'))
 	if($req->rowCount() == 1)
 	{
 		$data = $req->fetch();
-		$msg = 'Click on this link to modify your password : http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/modify_forgot.php?u='.$data['user_id'];
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$randstring = 'k';
+		for ($i = 0; $i < 30; $i++)
+		{
+			$randstring .= $characters[rand(0, strlen($characters)-1)];
+		}
+		$msg = 'Click on this link to modify your password : http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/modify_forgot.php?u='.$data['user_id'].'&k='.$randstring;
 		mail($_POST['email'], 'Password reset', $msg);
-		$req = $bdd->prepare('UPDATE users SET forgot = 1 WHERE email = ?');
-		$req->execute(array($_POST["email"]));
+		$req = $bdd->prepare('UPDATE users SET forgot = 1, token = ? WHERE email = ?');
+		$req->execute(array($randstring, $_POST["email"]));
 		header('Location: /forgot_redirect.php');
 		exit;
 	}

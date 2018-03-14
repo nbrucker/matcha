@@ -92,7 +92,7 @@ if (isset($_POST['age_min']) && isset($_POST['age_max']) && isset($_POST['popula
 		array_unshift($my_tags, $el['id']);
 		$req->execute($my_tags);
 		$nbr_tags = $req->rowCount();
-		if ($nbr_tags > count($my_tags) / 2)
+		if ($nbr_tags > floor(count($my_tags)) / 2)
 		{
 			$match[] = $el;
 			unset($users[$key]);

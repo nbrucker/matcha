@@ -18,14 +18,19 @@ if (blocked($profile['id'], $_SESSION['id'], $bdd))
 	header("Location: /blocked_redirect.php");
 	exit;
 }
-$req = $bdd->prepare('SELECT pic_0 FROM users WHERE id = ?');
-$req->execute(array($_SESSION['id']));
-if ($req->rowCount() != 1)
+$me = [];
+$me['pic_0'] = "";
+if ($_SESSION['id'] != '-42')
 {
-	header("Location: /");
-	exit;
+	$req = $bdd->prepare('SELECT pic_0 FROM users WHERE id = ?');
+	$req->execute(array($_SESSION['id']));
+	if ($req->rowCount() != 1)
+	{
+		header("Location: /");
+		exit;
+	}
+	$me = $req->fetch();
 }
-$me = $req->fetch();
 if ($profile['id'] != $_SESSION['id'] && $_SESSION['id'] != "-42")
 {
 	$req = $bdd->prepare('INSERT INTO visits (visited_id, visiting_id, time) VALUES (:visited_id, :visiting_id, :time)');
@@ -109,7 +114,7 @@ if ($profile['id'] != $_SESSION['id'] && $_SESSION['id'] != "-42")
 			<span class="information">Interest :</span>
 			<br />
 			<?php
-			$req = $bdd->prepare('SELECT tag FROM tags WHERE user_id = ? ORDER BY id');
+			$req = $bdd->prepare('SELECT tags.tag as tag FROM tags INNER JOIN links ON links.tag_id = tags.id WHERE links.user_id = ? ORDER BY links.id');
 			$req->execute(array($profile['id']));
 			while ($data = $req->fetch())
 			{

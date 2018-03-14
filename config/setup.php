@@ -40,8 +40,13 @@ try
 	//tags
 	$bdd->query("CREATE TABLE tags(
 				id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-				user_id INT UNSIGNED NOT NULL,
 				tag TEXT NOT NULL)");
+
+	//links
+	$bdd->query("CREATE TABLE links(
+				id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+				user_id INT UNSIGNED NOT NULL,
+				tag_id INT UNSIGNED NOT NULL)");
 
 	//blocks
 	$bdd->query("CREATE TABLE blocks(

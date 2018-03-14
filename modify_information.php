@@ -55,7 +55,7 @@ if (check_post('bio'))
 if (isset($_POST['tags']))
 {
 	$tags = json_decode($_POST['tags']);
-	$req = $bdd->prepare('SELECT id, tag FROM tags WHERE user_id = ?');
+	$req = $bdd->prepare('SELECT links.id as id, tags.tag as tag FROM links INNER JOIN tags ON tags.id = links.tag_id WHERE links.user_id = ?');
 	$req->execute(array($_SESSION["id"]));
 	while ($data = $req->fetch())
 	{
@@ -63,16 +63,30 @@ if (isset($_POST['tags']))
 			unset($tags[$key]);
 		else
 		{
-			$reqb = $bdd->prepare('DELETE FROM tags WHERE id = ?');
+			$reqb = $bdd->prepare('DELETE FROM links WHERE id = ?');
 			$reqb->execute(array($data['id']));
 		}
 	}
 	foreach ($tags as $tag)
 	{
-		$req = $bdd->prepare('INSERT INTO tags (user_id, tag) VALUES (:user_id, :tag)');
+
+		$req = $bdd->prepare('SELECT id FROM tags WHERE tag = ?');
+		$req->execute(array(htmlspecialchars($tag)));
+		if ($req->rowCount() == 0)
+		{
+			$req = $bdd->prepare('INSERT INTO tags (tag) VALUES (:tag)');
+			$req->execute(array(
+			'tag' => htmlspecialchars($tag)
+			));
+		}
+		$req = $bdd->prepare('SELECT id FROM tags WHERE tag = ?');
+		$req->execute(array(htmlspecialchars($tag)));
+		$data = $req->fetch();
+		$id = $data['id'];
+		$req = $bdd->prepare('INSERT INTO links (tag_id, user_id) VALUES (:tag_id, :user_id)');
 		$req->execute(array(
-		'user_id' => htmlspecialchars($_SESSION['id']),
-		'tag' => htmlspecialchars($tag)
+		'tag_id' => $id,
+		'user_id' => $_SESSION["id"]
 		));
 	}
 }

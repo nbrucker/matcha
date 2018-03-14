@@ -23,7 +23,7 @@ if ($me['gender'] == 0 || $me['orientation'] == 0 || $me['bio'] == ""|| $me['age
 	<?php
 	exit;
 }
-$req = $bdd->prepare('SELECT tag FROM tags WHERE user_id = ?');
+$req = $bdd->prepare('SELECT tags.tag as tag FROM tags INNER JOIN links ON links.tag_id = tags.id WHERE links.user_id = ?');
 $req->execute(array($_SESSION['id']));
 if ($req->rowCount() < 1)
 {
@@ -79,7 +79,7 @@ if (isset($_POST['age_min']) && isset($_POST['age_max']) && isset($_POST['popula
 	foreach ($users as $key => $el)
 	{
 		$i = 0;
-		$sql = "SELECT id FROM tags WHERE user_id = ? AND tag IN (";
+		$sql = "SELECT tags.id as id FROM tags INNER JOIN links ON links.tag_id = tags.id WHERE links.user_id = ? AND tags.tag IN (";
 		foreach ($my_tags as $tag)
 		{
 			if ($i > 0)
@@ -128,7 +128,7 @@ if (isset($_POST['age_min']) && isset($_POST['age_max']) && isset($_POST['popula
 		if (count($tags) > 0)
 		{
 			$i = 0;
-			$sql = "SELECT id FROM tags WHERE user_id = ? AND tag IN (";
+			$sql = "SELECT tags.id as id FROM tags INNER JOIN links ON links.tag_id = tags.id WHERE links.user_id = ? AND tags.tag IN (";
 			foreach ($tags as $tag)
 			{
 				if ($i > 0)

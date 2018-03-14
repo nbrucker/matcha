@@ -26,7 +26,7 @@ if (isset($_POST['age_min']) && isset($_POST['age_max']) && isset($_POST['popula
 		if (count($tags) > 0)
 		{
 			$i = 0;
-			$sql = "SELECT id FROM tags WHERE user_id = ? AND tag IN (";
+			$sql = "SELECT tags.id as id FROM tags INNER JOIN links ON links.tag_id = tags.id WHERE links.user_id = ? AND tags.tag IN (";
 			foreach ($tags as $tag)
 			{
 				if ($i > 0)

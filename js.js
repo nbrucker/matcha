@@ -16,6 +16,10 @@ var file_3;
 var file_4;
 var msg = [];
 
+function hideAlert()
+{
+	document.getElementById("alert").style.display = "none";
+}
 function sendMsg(key, id)
 {
 	if (event.keyCode == 13 && $('#msg').val() != "" && id != 'unknown')
@@ -214,12 +218,11 @@ function getPositionIndex()
 		}
 	});
 }
-async function setMapIndex(json)
+function setMapIndex(json)
 {
 	var arr = JSON.parse(json);
 	if (arr[0] == "unknown" || arr[1] == "unknown" || arr[0] == "999" || arr[1] == "999")
 	{
-		sleep(100);
 		getPositionIndex();
 		return ;
 	}
@@ -538,14 +541,13 @@ function getPositionProfile(id)
 		}
 	});
 }
-async function setMapProfile(json)
+function setMapProfile(json)
 {
 	var arr = JSON.parse(json);
 	latitude = arr[0];
 	longitude = arr[1];
 	if (arr[0] == "unknown" || arr[1] == "unknown" || arr[0] == "999" || arr[1] == "999")
 	{
-		sleep(100);
 		getPositionProfile();
 		return ;
 	}
@@ -633,6 +635,7 @@ function saveInfo(event)
 		processData: false,
 		contentType: false
 	});
+	document.getElementById("alert").style.display = "";
 }
 function removePic(id)
 {
@@ -828,12 +831,11 @@ function getRealPosition()
 		}
 	});
 }
-async function setAutoLoc(json)
+function setAutoLoc(json)
 {
 	var arr = JSON.parse(json);
 	if (arr[0] == "unknown" || arr[1] == "unknown" || arr[0] == "999" || arr[1] == "999")
 	{
-		sleep(100);
 		getRealPosition();
 		return ;
 	}
@@ -885,12 +887,11 @@ function getPosition()
 		}
 	});
 }
-async function setMap(json)
+function setMap(json)
 {
 	var arr = JSON.parse(json);
 	if (arr[0] == "unknown" || arr[1] == "unknown" || arr[0] == "999" || arr[1] == "999")
 	{
-		sleep(100);
 		getPosition();
 		return ;
 	}

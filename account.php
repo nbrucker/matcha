@@ -17,19 +17,23 @@ $data = $req->fetch();
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 	<script src="/jquery.js"></script>
 	<script src="/js.js"></script>
-	<script src="/awesomplete.js"></script>
 	<script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
 	<link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
 	<script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.js"></script>
 	<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.min.js'></script>
 	<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css' />
 	<link rel='stylesheet' href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.css" />
-	<link rel="stylesheet" href="/awesomplete.css" />
 	<link rel="stylesheet" type="text/css" href="/css.css">
 	<link rel="icon" type="image/png" href="/imgs/42.png" />
 </head>
 <body onload="loadTags();getPosition();">
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/header.php'); ?>
+	<div style="display: none;" id="alert" class="alert">
+		<div id="alert_div">
+			<p id="text_alert">Modification saved</p>
+			<span class="closebtn" onclick="hideAlert();">&times;</span>
+		</div>
+	</div>
 	<div class="information">
 		<input class="login" type="text" id="last_name" placeholder="Last name" value="<?php echo $data['last_name'] ?>" />
 		<br />
@@ -64,15 +68,7 @@ $data = $req->fetch();
 		<div id="box_tags" class="box_account_tags"></div>
 		<span class="help">Type a word, then press enter to add it !</span>
 		<br />
-		<input onkeyup="changeInput(event);" class="login awesomplete" list="mylist" type="text" id="tag" placeholder="#" value="#" maxlength="10" />
-		<datalist id="mylist">
-			<?php
-			$req = $bdd->prepare('SELECT distinct tag FROM tags WHERE tag NOT IN (SELECT tag FROM tags WHERE user_id = ?) ORDER BY tag');
-			$req->execute(array($_SESSION['id']));
-			while ($tags = $req->fetch())
-				echo "<option id=\"".$tags['tag']."\">".$tags['tag']."</option>";
-			?>
-		</datalist>
+		<input onkeyup="changeInput(event);" class="login" type="text" id="tag" placeholder="#" value="#" maxlength="10" />
 		<br />
 		<span class="information">Geolocation :</span>
 		<br />

@@ -7,14 +7,12 @@
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 	<script src="/jquery.js"></script>
 	<script src="/js.js"></script>
-	<script src="/awesomplete.js"></script>
 	<script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
 	<link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
 	<script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.js"></script>
 	<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.min.js'></script>
 	<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css' />
 	<link rel='stylesheet' href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.css" />
-	<link rel="stylesheet" href="/awesomplete.css" />
 	<link rel="stylesheet" type="text/css" href="/css.css">
 	<link rel="icon" type="image/png" href="/imgs/42.png" />
 </head>
@@ -46,15 +44,7 @@
 			<input onchange="getIndex();" class="login index_right" type="number" id="distance_max" placeholder="km" />
 		</div>
 		<div id="box_tags" class="box_account_tags"></div>
-		<input onkeyup="changeInputIndex(event);" class="login awesomplete" list="mylist" type="text" id="tag" placeholder="#" value="#" maxlength="10" />
-		<datalist id="mylist">
-			<?php
-			$req = $bdd->prepare('SELECT distinct tag FROM tags ORDER BY tag');
-			$req->execute(array());
-			while ($tags = $req->fetch())
-				echo "<option id=\"".$tags['tag']."\">".$tags['tag']."</option>";
-			?>
-		</datalist>
+		<input onkeyup="changeInputIndex(event);" class="login" type="text" id="tag" placeholder="#" value="#" maxlength="10" />
 		<br />
 		<select onchange="getIndex();" class="login" id="order">
 			<option selected value="0">Popularity ▼</option>

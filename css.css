@@ -386,13 +386,13 @@ img.account_pics_trash1
 div.profile
 {
 	margin: 0 auto;
-	width: 1000px;
+	max-width: 1000px;
 	margin-top: 50px;
 }
 div.profile_left
 {
 	float: left;
-	width: 300px;
+	max-width: 300px;
 }
 div.profile_pics
 {
@@ -713,7 +713,6 @@ span.chat_list
 	display: block;
 	padding: 2px 5px;
 	border-bottom: 1px solid black;
-	width: 190px;
 	height: 18px;
 	text-overflow: ellipsis;
 	overflow: hidden;
@@ -800,6 +799,83 @@ span.chat_text_not
 	padding-right: 20px;
 	word-break: break-all;
 	max-width: calc(50% - 50px);
+}
+#alert
+{
+	z-index: 45;
+	left: 0px;
+	top: 0px;
+}
+#alert_div
+{
+	text-align: center;
+	z-index: 4;
+	position: fixed;
+	width: 100%;
+	top: 0px;
+	padding: 28px;
+	background-color: #568456;
+	color: white;
+	transition: opacity 0.6s;
+	margin-bottom: 15px;
+	height: 30px;
+	line-height: 30px;
+}
+#alert p
+{
+	font-size: 25px;
+	margin: 0px 0px;
+	left: 30px;
+	position: absolute;
+}
+.closebtn
+{
+	margin-right: 60px;
+	color: white;
+	font-weight: bold;
+	float: right;
+	font-size: 25px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+.closebtn:hover
+{
+	color: black;
+}
+span.list_title
+{
+	display: block;
+	margin-bottom: 20px;
+	font-weight: bold;
+	font-size: 25px;
+}
+@media screen and (max-width: 1030px)
+{
+	div.profile_info
+	{
+		width: 300px;
+		margin: 0 auto;
+		float: none!important;
+	}
+	div.profile_left
+	{
+		width: 300px;
+		margin: 0 auto;
+		float: none!important;
+		margin-top: 50px;
+		margin-bottom: 50px;
+	}
+}
+@media screen and (max-width: 568px)
+{
+	div.header
+	{
+		height: 100px;
+	}
+	div.right
+	{
+		float: left;
+	}
 }
 @media screen and (max-width: 440px)
 {

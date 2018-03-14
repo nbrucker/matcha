@@ -19,6 +19,7 @@ if ($_SESSION['id'] == '-42')
 <body>
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/header.php'); ?>
 	<div style="margin-top: 50px;" id="index_box" class="index_box">
+		<span class="list_title">Profile who liked you</span>
 		<?php
 		$req = $bdd->prepare('SELECT DISTINCT users.last_name, users.first_name, users.user_id, users.pic_0 FROM users INNER JOIN likes ON likes.liking_id = users.id WHERE likes.liked_id = ?');
 		$req->execute(array($_SESSION['id']));

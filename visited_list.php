@@ -19,6 +19,7 @@ if ($_SESSION['id'] == '-42')
 <body>
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/header.php'); ?>
 	<div style="margin-top: 50px;" id="index_box" class="index_box">
+		<span class="list_title">Profile you visited</span>
 		<?php
 		$req = $bdd->prepare('SELECT DISTINCT users.last_name, users.first_name, users.user_id, users.pic_0 FROM users INNER JOIN visits ON visits.visited_id = users.id WHERE visits.visiting_id = ?');
 		$req->execute(array($_SESSION['id']));

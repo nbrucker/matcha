@@ -38,7 +38,7 @@ if(strpos($_SERVER['REQUEST_URI'], 'header') != false)
 			if ($_SESSION['id'] != "-42")
 			{
 				?>
-				<li style="margin-right: 20px;" class="section">
+				<li style="margin-right: 20px; margin-left: 16px;" class="section">
 					<a onclick="showNotificationBox();" id="notification_nbr" class="header_notification">0</a>
 				</li>
 				<?php

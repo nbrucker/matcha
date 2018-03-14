@@ -18,6 +18,14 @@ if (blocked($profile['id'], $_SESSION['id'], $bdd))
 	header("Location: /blocked_redirect.php");
 	exit;
 }
+$req = $bdd->prepare('SELECT pic_0 FROM users WHERE id = ?');
+$req->execute(array($_SESSION['id']));
+if ($req->rowCount() != 1)
+{
+	header("Location: /");
+	exit;
+}
+$me = $req->fetch();
 if ($profile['id'] != $_SESSION['id'] && $_SESSION['id'] != "-42")
 {
 	$req = $bdd->prepare('INSERT INTO visits (visited_id, visiting_id, time) VALUES (:visited_id, :visiting_id, :time)');
@@ -48,20 +56,76 @@ if ($profile['id'] != $_SESSION['id'] && $_SESSION['id'] != "-42")
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 	<script src="/jquery.js"></script>
 	<script src="/js.js"></script>
-	<script src="/awesomplete.js"></script>
 	<script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
 	<link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
 	<script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.js"></script>
 	<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.min.js'></script>
 	<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css' />
 	<link rel='stylesheet' href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.css" />
-	<link rel="stylesheet" href="/awesomplete.css" />
 	<link rel="stylesheet" type="text/css" href="/css.css">
 	<link rel="icon" type="image/png" href="/imgs/42.png" />
 </head>
 <body onload="getPositionProfile('<?php echo $_GET['u'] ?>');">
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/header.php'); ?>
 	<div class="profile">
+		<div class="profile_info">
+			<span class="profile_name"><?php echo $profile['first_name']." ".$profile['last_name'] ?></span>
+			<br />
+			<?php
+			if ($profile['pic_0'] != "")
+			{
+				$src = "/imgs/like.svg";
+				$req = $bdd->prepare('SELECT id FROM likes WHERE liking_id = ? AND liked_id = ?');
+				$req->execute(array($_SESSION['id'], $profile['id']));
+				if ($req->rowCount() == 1)
+					$src = "/imgs/liked.svg";
+				if ($profile['id'] != $_SESSION['id'] && !empty($me['pic_0']))
+				{
+					?>
+					<img id="like" onclick="like('<?php echo $_GET['u'] ?>');" src="<?php echo $src ?>" class="profile_like">
+					<?php
+				}
+			}
+			?>
+			<br />
+			<br />
+			<span class="information">Popularity : <span id="popularity"><?php echo $profile['popularity'] ?></span></span>
+			<br />
+			<br />
+			<span class="information">Age : <?php echo $profile['age'] ?></span>
+			<br />
+			<br />
+			<span class="information">Gender : <?php if ($profile['gender'] == 1) echo "Man"; else if ($profile['gender'] == 2) echo "Woman"; ?></span>
+			<br />
+			<br />
+			<span class="information">Looking for : <?php if ($profile['orientation'] == 1) echo "Men"; else if ($profile['orientation'] == 2) echo "Women"; else if ($profile['orientation'] == 3) echo "Men, Women"; ?></span>
+			<br />
+			<br />
+			<span class="information">Bio :</span>
+			<br />
+			<span class="profile_bio"><?php echo $profile['bio'] ?></span>
+			<br />
+			<br />
+			<span class="information">Interest :</span>
+			<br />
+			<?php
+			$req = $bdd->prepare('SELECT tag FROM tags WHERE user_id = ? ORDER BY id');
+			$req->execute(array($profile['id']));
+			while ($data = $req->fetch())
+			{
+				?>
+				<div class="profile_tags">
+					<span class="profile_tags"><?php echo $data['tag'] ?></span>
+				</div>
+				<?php
+			}
+			?>
+			<br />
+			<br />
+			<span class="information">Geolocation :</span>
+			<br />
+			<div id="map" class="profile_map"></div>
+		</div>
 		<div class="profile_left">
 			<div class="profile_pics">
 				<?php
@@ -124,64 +188,6 @@ if ($profile['id'] != $_SESSION['id'] && $_SESSION['id'] != "-42")
 				}
 			}
 			?>
-		</div>
-		<div class="profile_info">
-			<span class="profile_name"><?php echo $profile['first_name']." ".$profile['last_name'] ?></span>
-			<br />
-			<?php
-			if ($profile['pic_0'] != "")
-			{
-				$src = "/imgs/like.svg";
-				$req = $bdd->prepare('SELECT id FROM likes WHERE liking_id = ? AND liked_id = ?');
-				$req->execute(array($_SESSION['id'], $profile['id']));
-				if ($req->rowCount() == 1)
-					$src = "/imgs/liked.svg";
-				if ($profile['id'] != $_SESSION['id'])
-				{
-					?>
-					<img id="like" onclick="like('<?php echo $_GET['u'] ?>');" src="<?php echo $src ?>" class="profile_like">
-					<?php
-				}
-			}
-			?>
-			<br />
-			<br />
-			<span class="information">Popularity : <span id="popularity"><?php echo $profile['popularity'] ?></span></span>
-			<br />
-			<br />
-			<span class="information">Age : <?php echo $profile['age'] ?></span>
-			<br />
-			<br />
-			<span class="information">Gender : <?php if ($profile['gender'] == 1) echo "Man"; else if ($profile['gender'] == 2) echo "Woman"; ?></span>
-			<br />
-			<br />
-			<span class="information">Looking for : <?php if ($profile['orientation'] == 1) echo "Men"; else if ($profile['orientation'] == 2) echo "Women"; else if ($profile['orientation'] == 3) echo "Men, Women"; ?></span>
-			<br />
-			<br />
-			<span class="information">Bio :</span>
-			<br />
-			<span class="profile_bio"><?php echo $profile['bio'] ?></span>
-			<br />
-			<br />
-			<span class="information">Interest :</span>
-			<br />
-			<?php
-			$req = $bdd->prepare('SELECT tag FROM tags WHERE user_id = ? ORDER BY id');
-			$req->execute(array($profile['id']));
-			while ($data = $req->fetch())
-			{
-				?>
-				<div class="profile_tags">
-					<span class="profile_tags"><?php echo $data['tag'] ?></span>
-				</div>
-				<?php
-			}
-			?>
-			<br />
-			<br />
-			<span class="information">Geolocation :</span>
-			<br />
-			<div id="map" class="profile_map"></div>
 		</div>
 	</div>
 </body>

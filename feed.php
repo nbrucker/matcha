@@ -20,7 +20,7 @@ function get_fake_image($men, $women, $gender)
 <?php
 function get_fake_tag($used)
 {
-	$tags = ['#fake', '#tags', '#hey'];
+	$tags = ['#42', '#travel', '#cooking', '#shopping', '#family', '#work', '#sport', '#share', '#tech', '#children', '#food', '#museum'];
 	$tag = $tags[rand(0, count($tags) - 1)];
 	while (in_array($tag, $used))
 		$tag = $tags[rand(0, count($tags) - 1)];
@@ -58,7 +58,7 @@ while ($j < 500)
 	}
 	$hash = hash('whirlpool', $faker->password);
 	$gender = rand(1, 2);
-	$req = $bdd->prepare('INSERT INTO users (user_id, email, login, last_name, first_name, password, gender, orientation, bio, popularity, last_log, latitude, longitude, fake_latitude, fake_longitude, auto_loc, confirmed, forgot, pic_0, pic_1, pic_2, pic_3, pic_4, age) VALUES (:user_id, :email, :login, :last_name, :first_name, :password, :gender, :orientation, :bio, :popularity, :last_log, :latitude, :longitude, :fake_latitude, :fake_longitude, 0, 1, 0, :pic_0, :pic_1, :pic_2, :pic_3, :pic_4, :age)');
+	$req = $bdd->prepare('INSERT INTO users (user_id, email, login, last_name, first_name, password, gender, orientation, bio, popularity, last_log, latitude, longitude, fake_latitude, fake_longitude, auto_loc, confirmed, forgot, pic_0, pic_1, pic_2, pic_3, pic_4, age, token) VALUES (:user_id, :email, :login, :last_name, :first_name, :password, :gender, :orientation, :bio, :popularity, :last_log, :latitude, :longitude, :fake_latitude, :fake_longitude, 0, 1, 0, :pic_0, :pic_1, :pic_2, :pic_3, :pic_4, :age, :token)');
 	$req->execute(array(
 	'user_id' => $randstring,
 	'email' => $faker->email,
@@ -80,7 +80,8 @@ while ($j < 500)
 	'pic_2' => "",
 	'pic_3' => "",
 	'pic_4' => "",
-	'age' => rand(18, 40)
+	'age' => rand(18, 40),
+	'token' => "",
 	));
 	$fake_id = $bdd->lastInsertId();
 	$i = 0;

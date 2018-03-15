@@ -21,7 +21,7 @@ if (check_post('password'))
 		$req->execute(array($_SESSION["id"]));
 		$req = $bdd->prepare('DELETE FROM blocks WHERE blocked_id = ? OR blocking_id = ?');
 		$req->execute(array($_SESSION["id"], $_SESSION["id"]));
-		$req = $bdd->prepare('SELECT users.id FROM users INNER JOIN likes ON likes.liked_id = users.id WHERE likes.liking_id = ?');
+		$req = $bdd->prepare('SELECT users.id as id FROM users INNER JOIN likes ON likes.liked_id = users.id WHERE likes.liking_id = ?');
 		$req->execute(array($_SESSION["id"]));
 		while ($data = $req->fetch())
 		{
@@ -36,8 +36,8 @@ if (check_post('password'))
 		$req->execute(array($_SESSION["id"], $_SESSION["id"]));
 		$req = $bdd->prepare('DELETE FROM messages WHERE to_id = ? OR from_id = ?');
 		$req->execute(array($_SESSION["id"], $_SESSION["id"]));
-		$req = $bdd->prepare('DELETE FROM notifications WHERE user_id = ?');
-		$req->execute(array($_SESSION["id"]));
+		$req = $bdd->prepare('DELETE FROM notifications WHERE user_id = ? OR notifier_id = ?');
+		$req->execute(array($_SESSION["id"], $_SESSION["id"]));
 		if (file_exists($user['pic_0']))
 			unlink($user['pic_0']);
 		if (file_exists($user['pic_1']))

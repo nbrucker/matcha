@@ -15,7 +15,7 @@ if (check_get('n'))
 		exit;
 	}
 	$data = $req->fetch();
-	$req = $bdd->prepare('UPDATE notifications SET seen = 1 WHERE notification_id = ?');
+	$req = $bdd->prepare('DELETE FROM notifications WHERE notification_id = ?');
 	$req->execute(array($_GET['n']));
 	header("Location: ".$data['link']);
 	exit;

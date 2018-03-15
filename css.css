@@ -882,6 +882,10 @@ span.list_title
 		float: none!important;
 		display: block;
 	}
+	div.chat_big_box
+	{
+		height: calc(100vh - 100px);
+	}
 }
 @media screen and (max-width: 440px)
 {

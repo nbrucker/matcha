@@ -105,13 +105,15 @@ if (check_post('loc') && isset($_POST['latitude']) && isset($_POST['longitude'])
 }
 if (check_post('pic_0') && $_POST['pic_0'] == "removed")
 {
-	if (file_exists($user['pic_0']))
+	if (!empty($user['pic_0']) && file_exists($user['pic_0']))
 		unlink($user['pic_0']);
 	$req = $bdd->prepare('UPDATE users SET pic_0 = ? WHERE id = ?');
 	$req->execute(array("", $_SESSION["id"]));
 }
 if (isset($_FILES['pic_0']))
 {
+	if (!empty($user['pic_0']) && file_exists($user['pic_0']))
+		unlink($user['pic_0']);
 	$fileName = $_FILES['pic_0']['name'];
 	$fileLoc = $_FILES['pic_0']['tmp_name'];
 	$fileType = $_FILES['pic_0']['type'];
@@ -129,13 +131,15 @@ if (isset($_FILES['pic_0']))
 }
 if (check_post('pic_1') && $_POST['pic_1'] == "removed")
 {
-	if (file_exists($user['pic_1']))
+	if (!empty($user['pic_1']) && file_exists($user['pic_1']))
 		unlink($user['pic_1']);
 	$req = $bdd->prepare('UPDATE users SET pic_1 = ? WHERE id = ?');
 	$req->execute(array("", $_SESSION["id"]));
 }
 if (isset($_FILES['pic_1']))
 {
+	if (!empty($user['pic_1']) && file_exists($user['pic_1']))
+		unlink($user['pic_1']);
 	$fileName = $_FILES['pic_1']['name'];
 	$fileLoc = $_FILES['pic_1']['tmp_name'];
 	$fileType = $_FILES['pic_1']['type'];
@@ -153,13 +157,15 @@ if (isset($_FILES['pic_1']))
 }
 if (check_post('pic_2') && $_POST['pic_2'] == "removed")
 {
-	if (file_exists($user['pic_2']))
+	if (!empty($user['pic_2']) && file_exists($user['pic_2']))
 		unlink($user['pic_2']);
 	$req = $bdd->prepare('UPDATE users SET pic_2 = ? WHERE id = ?');
 	$req->execute(array("", $_SESSION["id"]));
 }
 if (isset($_FILES['pic_2']))
 {
+	if (!empty($user['pic_2']) && file_exists($user['pic_2']))
+		unlink($user['pic_2']);
 	$fileName = $_FILES['pic_2']['name'];
 	$fileLoc = $_FILES['pic_2']['tmp_name'];
 	$fileType = $_FILES['pic_2']['type'];
@@ -177,13 +183,15 @@ if (isset($_FILES['pic_2']))
 }
 if (check_post('pic_3') && $_POST['pic_3'] == "removed")
 {
-	if (file_exists($user['pic_3']))
+	if (!empty($user['pic_3']) && file_exists($user['pic_3']))
 		unlink($user['pic_3']);
 	$req = $bdd->prepare('UPDATE users SET pic_3 = ? WHERE id = ?');
 	$req->execute(array("", $_SESSION["id"]));
 }
 if (isset($_FILES['pic_3']))
 {
+	if (!empty($user['pic_3']) && file_exists($user['pic_3']))
+		unlink($user['pic_3']);
 	$fileName = $_FILES['pic_3']['name'];
 	$fileLoc = $_FILES['pic_3']['tmp_name'];
 	$fileType = $_FILES['pic_3']['type'];
@@ -201,13 +209,15 @@ if (isset($_FILES['pic_3']))
 }
 if (check_post('pic_4') && $_POST['pic_4'] == "removed")
 {
-	if (file_exists($user['pic_4']))
+	if (!empty($user['pic_4']) && file_exists($user['pic_4']))
 		unlink($user['pic_4']);
 	$req = $bdd->prepare('UPDATE users SET pic_4 = ? WHERE id = ?');
 	$req->execute(array("", $_SESSION["id"]));
 }
 if (isset($_FILES['pic_4']))
 {
+	if (!empty($user['pic_4']) && file_exists($user['pic_4']))
+		unlink($user['pic_4']);
 	$fileName = $_FILES['pic_4']['name'];
 	$fileLoc = $_FILES['pic_4']['tmp_name'];
 	$fileType = $_FILES['pic_4']['type'];

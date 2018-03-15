@@ -21,12 +21,12 @@ if (check_post('password'))
 		$req->execute(array($_SESSION["id"]));
 		$req = $bdd->prepare('DELETE FROM blocks WHERE blocked_id = ? OR blocking_id = ?');
 		$req->execute(array($_SESSION["id"], $_SESSION["id"]));
-		$req = $bdd->prepare('SELECT users.id as id FROM users INNER JOIN likes ON likes.liked_id = users.id WHERE likes.liking_id = ?');
+		$req = $bdd->prepare('SELECT liked_id FROM likes WHERE liking_id = ?');
 		$req->execute(array($_SESSION["id"]));
 		while ($data = $req->fetch())
 		{
-			$req = $bdd->prepare('UPDATE users SET popularity = popularity - 1 WHERE id = ?');
-			$req->execute(array($data["id"]));
+			$reqb = $bdd->prepare('UPDATE users SET popularity = popularity - 1 WHERE id = ?');
+			$reqb->execute(array($data["liked_id"]));
 		}
 		$req = $bdd->prepare('DELETE FROM likes WHERE liked_id = ? OR liking_id = ?');
 		$req->execute(array($_SESSION["id"], $_SESSION["id"]));
@@ -38,15 +38,15 @@ if (check_post('password'))
 		$req->execute(array($_SESSION["id"], $_SESSION["id"]));
 		$req = $bdd->prepare('DELETE FROM notifications WHERE user_id = ? OR notifier_id = ?');
 		$req->execute(array($_SESSION["id"], $_SESSION["id"]));
-		if (file_exists($user['pic_0']))
+		if (!empty($user['pic_0']) && file_exists($user['pic_0']))
 			unlink($user['pic_0']);
-		if (file_exists($user['pic_1']))
+		if (!empty($user['pic_1']) && file_exists($user['pic_1']))
 			unlink($user['pic_1']);
-		if (file_exists($user['pic_2']))
+		if (!empty($user['pic_2']) && file_exists($user['pic_2']))
 			unlink($user['pic_2']);
-		if (file_exists($user['pic_3']))
+		if (!empty($user['pic_3']) && file_exists($user['pic_3']))
 			unlink($user['pic_3']);
-		if (file_exists($user['pic_4']))
+		if (!empty($user['pic_4']) && file_exists($user['pic_4']))
 			unlink($user['pic_4']);
 		header('Location: /delete_redirect.php');
 		exit;

@@ -17,10 +17,17 @@ if (check_post('password'))
 		$user = $req->fetch();
 		$req = $bdd->prepare('DELETE FROM users WHERE id = ?');
 		$req->execute(array($_SESSION["id"]));
-		$req = $bdd->prepare('DELETE FROM tags WHERE user_id = ?');
+		$req = $bdd->prepare('DELETE FROM links WHERE user_id = ?');
 		$req->execute(array($_SESSION["id"]));
 		$req = $bdd->prepare('DELETE FROM blocks WHERE blocked_id = ? OR blocking_id = ?');
 		$req->execute(array($_SESSION["id"], $_SESSION["id"]));
+		$req = $bdd->prepare('SELECT users.id FROM users INNER JOIN likes ON likes.liked_id = users.id WHERE likes.liking_id = ?');
+		$req->execute(array($_SESSION["id"]));
+		while ($data = $req->fetch())
+		{
+			$req = $bdd->prepare('UPDATE users SET popularity = popularity - 1 WHERE id = ?');
+			$req->execute(array($data["id"]));
+		}
 		$req = $bdd->prepare('DELETE FROM likes WHERE liked_id = ? OR liking_id = ?');
 		$req->execute(array($_SESSION["id"], $_SESSION["id"]));
 		$req = $bdd->prepare('DELETE FROM reports WHERE reported_id = ? OR reporting_id = ?');

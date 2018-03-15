@@ -97,8 +97,7 @@ try
 }
 catch (Exception $e)
 {
-	echo $e;
-	// header("Location: /error.php");
+	header("Location: /error.php");
 	exit;
 }
 ?>

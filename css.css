@@ -453,9 +453,12 @@ span.profile_name
 	font-weight: bold;
 	font-family: Arial;
 	font-size: 30px;
-}
-span.profile_bio
-{
+	display: block;
+	width: 100%;
+	margin: 0 auto;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 div.profile_tags
 {
@@ -653,6 +656,12 @@ span.index_profile
 	font-family: Arial;
 	font-size: 20px;
 	color: black;
+	width: 280px;
+	display: block;
+	margin: 0 auto;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 div.more:hover
 {

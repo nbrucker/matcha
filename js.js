@@ -20,7 +20,7 @@ function hideAlert()
 {
 	document.getElementById("alert").style.display = "none";
 }
-function sendMsg(key, id)
+function sendMsg(event, id)
 {
 	if (event.keyCode == 13 && $('#msg').val() != "" && id != 'unknown')
 	{

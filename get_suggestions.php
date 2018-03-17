@@ -40,19 +40,11 @@ while ($res = $req->fetch())
 if (isset($_POST['age_min']) && isset($_POST['age_max']) && isset($_POST['popularity_min']) && isset($_POST['popularity_max']) && isset($_POST['latitude']) && isset($_POST['longitude']) && isset($_POST['distance_min']) && isset($_POST['distance_max']) && isset($_POST['tags']) && isset($_POST['order']) && isset($_POST['limit']))
 {
 	$users 	= [];
-	$req = $bdd->prepare('SELECT age, pic_0, popularity, latitude, longitude, fake_latitude, fake_longitude, auto_loc, id, first_name, last_name, user_id FROM users WHERE age != "" AND pic_0 != "" AND confirmed = 1 AND id != ?');
-	$req->execute(array($me['id']));
+	$req = $bdd->prepare('SELECT age, pic_0, popularity, latitude, longitude, fake_latitude, fake_longitude, auto_loc, id, first_name, last_name, user_id FROM users WHERE age != "" AND pic_0 != "" AND confirmed = 1 AND id != ? AND ? & gender = gender AND orientation & ? = ?');
+	$req->execute(array($me['id'], $me['orientation'], $me['gender'], $me['gender']));
 	while ($data = $req->fetch())
 		$users[] = $data;
 	$match = [];
-	foreach ($users as $key => $el)
-	{
-		if ($me['orientation'] & $el['gender'] == $el['gender'] && $el['orientation'] & $me['gender'] == $me['gender'])
-		{
-			$match[] = $el;
-			unset($users[$key]);
-		}
-	}
 	foreach ($users as $key => $el)
 	{
 		$latitude = $el['latitude'];

@@ -1,7 +1,10 @@
 <?php include($_SERVER['DOCUMENT_ROOT'].'/database.php'); ?>
 <?php
 if ($_SESSION['id'] != '-42')
+{
 	header('Location: /signed_in.php');
+	exit;
+}
 $text = "This account could not be confirmed.";
 if (check_get('u'))
 {

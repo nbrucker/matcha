@@ -94,6 +94,7 @@ try
 				link TEXT NOT NULL)");
 
 	header('Location: /');
+	exit;
 }
 catch (Exception $e)
 {
